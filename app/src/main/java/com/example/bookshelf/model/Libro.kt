@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable;
 
 @Serializable
 data class Libro(
-    val name: String,
+    val title: String,
+    val description: String,
     @SerialName("img_src") val imgSrc: String
 )
