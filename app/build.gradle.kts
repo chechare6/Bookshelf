@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.bookshelf"
-        minSdk = 24
+        minSdk = 25
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -66,6 +66,8 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    implementation("androidx.wear.compose:compose-material3:1.0.0-alpha15")
+    implementation("androidx.wear.compose:compose-material:1.2.1")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     debugImplementation("androidx.compose.ui:ui-tooling")
 }

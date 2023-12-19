@@ -1,5 +1,7 @@
 package com.example.bookshelf.ui.screens
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,8 +12,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.bookshelf.LibrosApplication
-import com.example.bookshelf.data.LibrosRepository
 import com.example.bookshelf.data.Libro
+import com.example.bookshelf.data.LibrosRepository
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -28,6 +30,22 @@ class LibrosViewModel(
 
     var librosUiState: LibrosUiState by mutableStateOf(LibrosUiState.Loading)
         private set
+
+    private val _searchWidgetState: MutableState<SearchWidgetState> =
+        mutableStateOf(value = SearchWidgetState.CLOSED)
+    val searchWidgetState: State<SearchWidgetState> = _searchWidgetState
+
+    private val _searchTextState: MutableState<String> =
+        mutableStateOf(value = "")
+    val searchTextState: State<String> = _searchTextState
+
+    fun updateSearchWidgetState(newValue: SearchWidgetState) {
+        _searchWidgetState.value = newValue
+    }
+
+    fun updateSearchTextState(newValue: String) {
+        _searchTextState.value = newValue
+    }
 
     init {
         getLibros("jazz+history")
@@ -59,5 +77,9 @@ class LibrosViewModel(
         }
     }
 
+    enum class SearchWidgetState {
+        OPENED,
+        CLOSED
+    }
 
 }
