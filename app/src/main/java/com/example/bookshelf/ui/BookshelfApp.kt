@@ -7,14 +7,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.bookshelf.data.Libro
 import com.example.bookshelf.ui.screens.LibrosViewModel
 import com.example.bookshelf.ui.screens.MainAppBar
 import com.example.bookshelf.ui.screens.MainScreen
 
 @Composable
-fun BookshelfApp() {
+fun BookshelfApp(
+    onBookClicked: (Libro) -> Unit
+) {
     val librosViewModel: LibrosViewModel = viewModel(factory = LibrosViewModel.Factory)
     val searchWidgetState = librosViewModel.searchWidgetState
     val searchTextState = librosViewModel.searchTextState
@@ -40,16 +42,17 @@ fun BookshelfApp() {
         }
     ) {
         Surface(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it),
             color = MaterialTheme.colorScheme.background
         ) {
             MainScreen(
                 librosUiState = librosViewModel.librosUiState,
-                retryAction = librosViewModel::getLibros,
+                retryAction = { librosViewModel.getLibros() },
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = 50.dp),
-                contentPadding = it
+                    .fillMaxSize(),
+                onBookClicked
             )
         }
     }

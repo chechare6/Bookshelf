@@ -14,7 +14,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -45,7 +44,6 @@ fun ClosedAppBar(onSearchClicked: () -> Unit) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OpenedAppBar(
     text: String,
@@ -57,7 +55,6 @@ fun OpenedAppBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(50.dp),
-//        elevationz = AppBarDefaults.TopAppBarElevation,
         color = MaterialTheme.colorScheme.primary
     ) {
         TextField(
@@ -114,11 +111,11 @@ fun OpenedAppBar(
                 onSearch = {
                     onSearchClicked(text)
                 }
-            ),
-            colors = TextFieldDefaults.textFieldColors(
-//                backgroundColor = Color.Transparent,
-                cursorColor = Color.White.copy(alpha = ContentAlpha.medium)
             )
+//            colors = TextFieldDefaults.textFieldColors(
+//                backgroundColor = Color.Transparent,
+//                cursorColor = Color.White.copy(alpha = ContentAlpha.medium)
+//            )
         )
     }
 }

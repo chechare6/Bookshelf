@@ -36,7 +36,7 @@ import com.example.bookshelf.data.Libro
 fun LibrosListScreen(
     libros: List<Libro>,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(4.dp)
+    onBookClicked: (Libro) -> Unit
 ) {
     LazyVerticalGrid(
         modifier = modifier,
@@ -53,19 +53,22 @@ fun LibrosListScreen(
                     .padding(horizontal = 4.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                LibroCard(libro = libro, modifier = Modifier.fillMaxSize())
+                LibroCard(libro = libro, modifier = Modifier.fillMaxSize(), onBookClicked)
             }
         }
     }
 }
 
 @Composable
-fun LibroCard(libro: Libro, modifier: Modifier = Modifier) {
+fun LibroCard(
+    libro: Libro,
+    modifier: Modifier = Modifier,
+    onBookClicked: (Libro) -> Unit) {
     Card (
         modifier = modifier
             .fillMaxSize()
             .height(400.dp)
-            .clickable { /* TODO - OnBookClicked */ },
+            .clickable { onBookClicked(libro) },
         shape = RoundedCornerShape(6.dp),
 
     ) {
