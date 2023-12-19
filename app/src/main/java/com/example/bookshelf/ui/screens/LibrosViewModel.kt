@@ -5,12 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.bookshelf.LibrosApplication
 import com.example.bookshelf.data.LibrosRepository
-import com.example.bookshelf.model.Libro
+import com.example.bookshelf.data.Libro
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -21,23 +22,27 @@ sealed interface LibrosUiState {
     object Loading : LibrosUiState
 }
 
-class LibrosViewModel(private val librosRepository: LibrosRepository) : ViewModel() {
+class LibrosViewModel(
+    private val librosRepository: LibrosRepository
+) : ViewModel() {
 
     var librosUiState: LibrosUiState by mutableStateOf(LibrosUiState.Loading)
         private set
 
     init {
-        getLibros()
+        getLibros("jazz+history")
     }
 
-    fun getLibros() {
+    fun getLibros(query: String = "Jazz History", maxResults: Int = 10) {
         viewModelScope.launch {
             librosUiState = LibrosUiState.Loading
             librosUiState = try {
-                LibrosUiState.Success(librosRepository.getLibros())
+                LibrosUiState.Success(librosRepository.getLibros(query, maxResults))
             } catch (e: IOException) {
+                e.printStackTrace()
                 LibrosUiState.Error
             } catch (e: HttpException) {
+                e.printStackTrace()
                 LibrosUiState.Error
             }
         }
@@ -46,11 +51,13 @@ class LibrosViewModel(private val librosRepository: LibrosRepository) : ViewMode
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
-                        as LibrosApplication)
-                val librosRepository = application.container.librosRepository
-                LibrosViewModel(librosRepository = librosRepository)
+                val application =
+                    (this[APPLICATION_KEY] as LibrosApplication)
+                val bookshelfRepository = application.container.librosRepository
+                LibrosViewModel(librosRepository = bookshelfRepository)
             }
         }
     }
+
+
 }

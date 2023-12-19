@@ -1,9 +1,13 @@
 package com.example.bookshelf.network
 
-import com.example.bookshelf.model.Libro
+import com.example.bookshelf.model.Bookshelf
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface BookshelfApiService {
-    @GET("libros")
-    suspend fun getLibros(): List<Libro>
+    @GET("volumes")
+    suspend fun getLibros(
+        @Query("q") query: String,
+        @Query("maxResults") maxResults: Int
+    ): Bookshelf
 }
