@@ -1,10 +1,13 @@
 package com.example.bookshelf.ui.screens
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -20,9 +23,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -33,16 +36,25 @@ import com.example.bookshelf.data.Libro
 fun LibrosListScreen(
     libros: List<Libro>,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
+    contentPadding: PaddingValues = PaddingValues(4.dp)
 ) {
     LazyVerticalGrid(
         modifier = modifier,
-        columns = GridCells.Adaptive(100.dp),
-        contentPadding = PaddingValues(4.dp)
+//        columns = GridCells.Adaptive(100.dp),
+        columns = GridCells.Fixed(2),
+        contentPadding = PaddingValues(4.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         itemsIndexed(libros) {
                _, libro ->
-            LibroCard(libro = libro, modifier = Modifier.fillMaxSize())
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 4.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                LibroCard(libro = libro, modifier = Modifier.fillMaxSize())
+            }
         }
     }
 }
@@ -51,22 +63,27 @@ fun LibrosListScreen(
 fun LibroCard(libro: Libro, modifier: Modifier = Modifier) {
     Card (
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxSize()
+            .height(400.dp)
             .clickable { /* TODO - OnBookClicked */ },
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(6.dp),
+
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
-                text = stringResource(R.string.libro_name, Any()),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(dimensionResource(R.dimen.padding_medium)),
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Start
-            )
+            libro.title?.let {
+                Text(
+                    text = it,
+                    modifier = Modifier
+                        .padding(dimensionResource(R.dimen.padding_medium))
+                        .height(70.dp),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Start,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
             AsyncImage(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxSize(),
                 model = ImageRequest.Builder(context = LocalContext.current)
                     .data(libro.imageLink?.replace("http:", "https:"))
                     .crossfade(true)
@@ -75,14 +92,6 @@ fun LibroCard(libro: Libro, modifier: Modifier = Modifier) {
                 contentScale = ContentScale.Crop,
                 error = painterResource(id = R.drawable.ic_broken_image),
                 placeholder = painterResource(id = R.drawable.loading_img)
-            )
-            Text(
-                text = stringResource(R.string.libro_name, Any()),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(dimensionResource(R.dimen.padding_medium)),
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Start
             )
         }
     }

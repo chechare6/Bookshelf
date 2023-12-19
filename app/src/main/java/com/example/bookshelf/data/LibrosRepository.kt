@@ -15,7 +15,7 @@ class DefaultLibrosRepository(
     ): List<Libro> = librosApiService.getLibros(query, maxResults).items.map { items ->
         Libro(
             title = items.volumeInfo?.title,
-            description = items.volumeInfo?.previewLink,
+            subtitle = items.volumeInfo?.subtitle,
             imageLink = items.volumeInfo?.imageLinks?.thumbnail
         )
     }
